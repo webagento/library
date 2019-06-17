@@ -11,8 +11,6 @@ final class ProductDto extends AbstractDto
 
     /**
      * Set the value of width.
-     *
-     * @return self
      */
     private function setWidth($width)
     {
@@ -21,8 +19,6 @@ final class ProductDto extends AbstractDto
 
     /**
      * Set the value of height.
-     *
-     * @return self
      */
     private function setHeight($height)
     {
@@ -31,11 +27,20 @@ final class ProductDto extends AbstractDto
 
     /**
      * Set the value of price.
-     *
-     * @return self
      */
     private function setPrice($price)
     {
         $this->price = str_replace(',', '.', $price);
     }
+
+    /**
+     * Get the value of color.
+     *
+     * @return string
+     */
+    private function getColor()
+    {
+        return str_replace('black', '#000000', $this->color);
+    }
+
 }

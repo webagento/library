@@ -14,30 +14,62 @@ abstract class AbstractDto
     {
         if (null !== $data) {
             foreach ($data as $property => $value) {
-                $method = 'set'.str_replace('_', '', ucwords($property, '_'));
-
-                if (method_exists($this, $method)) {
-                    $this->{$method}($value);
-                } elseif (property_exists($this, $property)) {
-                    $this->{$property} = $value;
-                }
+                $this->{$property} = $value;
             }
         }
     }
 
     /**
-     * Return the correct property or fail.
+     * Set property value or fail.
      *
      * @throws Exception
      *
      * @param string $property
+     * @param mixed  $value
+     */
+    public function __set(string $property, $value)
+    {
+        $method = 'set'.str_replace('_', '', ucwords($property, '_'));
+
+        if (method_exists($this, $method)) {
+            $this->{$method}($value);
+        } elseif (property_exists($this, $property)) {
+            $this->{$property} = $value;
+        } else {
+            throw new \Exception("Property {$property} does not exist!");
+        }
+    }
+
+    /**
+     * Return the correct property value or fail.
+     *
+     * @throws Exception
+     *
+     * @param string $property
+     *
+     * @return mixed
      */
     public function __get(string $property)
     {
-        if (!property_exists($this, $property)) {
-            throw new \Exception("Property {$property} does not exists");
+        $method = 'get'.str_replace('_', '', ucwords($property, '_'));
+
+        if (method_exists($this, $method)) {
+            return $this->{$method}();
+        } elseif (property_exists($this, $property)) {
+            return $this->{$property};
         }
 
-        return $this->{$property};
+        throw new \Exception("Property {$property} does not exist!");
+    }
+
+    /**
+     * Return an associative array from object instance.
+     *
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return (array) $this;
     }
 }
+
